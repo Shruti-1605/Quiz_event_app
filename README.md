@@ -42,8 +42,7 @@ python manage.py migrate
 ```bash
 python manage.py createsuperuser
 # Username: shruti
-# Email: your-email@example.com
-# Password: your-password
+# Password: MYPass@2025
 ```
 
 ### 6. Add Sample Data
@@ -87,5 +86,3 @@ Quiz_Events_Project/
 - Font Awesome Icons
 - SQLite Database
 
-## Note
-Database file (db.sqlite3) is not included in Git. You need to set up the database and add content after cloning.
