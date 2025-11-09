@@ -87,3 +87,5 @@ Quiz_Events_Project/
 - SQLite Database
 - Python
 
+
+Note: Database (db.sqlite3) is intentionally included so the recruiter can directly view quizzes and events without setup.
