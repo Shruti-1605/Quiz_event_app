@@ -77,7 +77,7 @@ Quiz_Events_Project/
 │   ├── settings.py        # Django settings
 │   └── urls.py            # Main URL config
 └── manage.py              # Django management
-```
+
 
 ## Technologies Used
 - Django 5.2.7
@@ -85,4 +85,5 @@ Quiz_Events_Project/
 - TailwindCSS
 - Font Awesome Icons
 - SQLite Database
+- Python
 
