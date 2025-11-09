@@ -1,0 +1,180 @@
+{% extends 'quiz_events_app/base.html' %}
+{% block title %}All Quizzes - Quiz & Events{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="bg-gradient-to-r from-sky-600 to-cyan-600 text-white py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h1 class="text-4xl md:text-5xl font-bold mb-4">
+      <i class="fas fa-brain mr-3"></i>
+      All Quizzes
+    </h1>
+    <p class="text-xl text-sky-100 max-w-2xl mx-auto">
+      Test your knowledge and challenge yourself with our collection of quizzes
+    </p>
+  </div>
+</div>
+
+<div class="relative bg-gradient-to-br from-sky-50 to-blue-50 py-16">
+  <!-- Background Pattern -->
+  <div class="absolute inset-0 opacity-30">
+    <svg class="w-full h-full" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+          <path d="m 60 0 l 0 0 0 60" fill="none" stroke="#0ea5e9" stroke-width="1" opacity="0.1"/>
+          <path d="m 0 60 l 60 0 0 0" fill="none" stroke="#0ea5e9" stroke-width="1" opacity="0.1"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#grid)" />
+    </svg>
+  </div>
+  
+  <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    {% if quizzes %}
+      <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+      {% for quiz in quizzes %}
+        <div class="group bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-xl p-10 border border-sky-200 hover:border-sky-300 relative overflow-hidden min-h-[280px] w-full transform transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+          <!-- Subtle decorative elements -->
+          <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-sky-200 to-blue-200 rounded-bl-full opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+          <div class="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-tr from-cyan-100 to-sky-100 rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+          
+          <div class="relative z-10">
+            <div class="flex items-center mb-6">
+              {% if quiz.category == 'python' %}
+                <div class="w-12 h-12 bg-gradient-to-r from-yellow-400 to-blue-500 rounded-full flex items-center justify-center">
+                  <i class="fab fa-python text-white text-lg"></i>
+                </div>
+              {% elif quiz.category == 'java' %}
+                <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center">
+                  <i class="fab fa-java text-white text-lg"></i>
+                </div>
+              {% elif quiz.category == 'javascript' %}
+                <div class="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center">
+                  <i class="fab fa-js-square text-black text-lg"></i>
+                </div>
+              {% elif quiz.category == 'php' %}
+                <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center">
+                  <i class="fab fa-php text-white text-lg"></i>
+                </div>
+              {% elif quiz.category == 'swift' %}
+                <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center">
+                  <i class="fab fa-swift text-white text-lg"></i>
+                </div>
+              {% elif quiz.category == 'cpp' %}
+                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                  <i class="fas fa-code text-white text-lg"></i>
+                </div>
+              {% elif quiz.category == 'csharp' %}
+                <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center">
+                  <i class="fas fa-hashtag text-white text-lg"></i>
+                </div>
+              {% elif quiz.category == 'ruby' %}
+                <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
+                  <i class="fas fa-gem text-white text-lg"></i>
+                </div>
+              {% elif quiz.category == 'go' %}
+                <div class="w-12 h-12 bg-cyan-500 rounded-full flex items-center justify-center">
+                  <i class="fas fa-code text-white text-lg"></i>
+                </div>
+              {% elif quiz.category == 'rust' %}
+                <div class="w-12 h-12 bg-orange-600 rounded-full flex items-center justify-center">
+                  <i class="fas fa-cog text-white text-lg"></i>
+                </div>
+              {% elif quiz.category == 'kotlin' %}
+                <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
+                  <i class="fas fa-code text-white text-lg"></i>
+                </div>
+              {% else %}
+                <div class="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center">
+                  <i class="fas fa-code text-white text-lg"></i>
+                </div>
+              {% endif %}
+              <div class="ml-4">
+                <h3 class="text-2xl font-bold text-gray-900 group-hover:text-sky-700 transition-colors duration-300">{{ quiz.title }}</h3>
+                <div class="flex items-center text-sm text-gray-500 mt-2">
+                  <div class="px-3 py-1 bg-sky-100 group-hover:bg-sky-200 text-sky-700 rounded-full text-xs font-semibold transition-all duration-300">
+                    <span class="capitalize">{{ quiz.get_category_display }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Info Section -->
+            <div class="mt-6 space-y-3">
+              <div class="flex items-center text-sm text-gray-600">
+                <div class="w-8 h-8 bg-sky-100 group-hover:bg-sky-200 rounded-full flex items-center justify-center mr-3 transition-colors duration-300">
+                  <i class="fas fa-clock text-sky-600 text-xs"></i>
+                </div>
+                <span>Interactive Quiz</span>
+              </div>
+              <div class="flex items-center text-sm text-gray-600">
+                <div class="w-8 h-8 bg-green-100 group-hover:bg-green-200 rounded-full flex items-center justify-center mr-3 transition-colors duration-300">
+                  <i class="fas fa-trophy text-green-600 text-xs"></i>
+                </div>
+                <span>Instant Results</span>
+              </div>
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-gray-200">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center text-sm text-gray-500">
+                  <i class="fas fa-users mr-2"></i>
+                  <span>Ready to Challenge?</span>
+                </div>
+                {% if user.is_authenticated %}
+                  <a href="{% url 'quiz_events_app:quiz_attempt' quiz.id %}" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white font-bold rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl">
+                    <i class="fas fa-play mr-3"></i>
+                    Start Quiz
+                  </a>
+                {% else %}
+                  <a href="{% url 'quiz_events_app:login' %}" class="inline-flex items-center px-8 py-4 bg-gray-600 hover:bg-gray-700 text-white font-bold rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl">
+                    <i class="fas fa-sign-in-alt mr-3"></i>
+                    Login to Start
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    
+    <!-- Stats Section -->
+    <div class="mt-16 bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-8">
+      <div class="text-center">
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">Quiz Statistics</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white rounded-xl p-6 shadow-md">
+            <div class="text-3xl font-bold text-sky-600 mb-2">{{ quizzes|length }}</div>
+            <div class="text-gray-600">Total Quizzes</div>
+          </div>
+          <div class="bg-white rounded-xl p-6 shadow-md">
+            <div class="text-3xl font-bold text-blue-600 mb-2">
+              <i class="fas fa-infinity"></i>
+            </div>
+            <div class="text-gray-600">Unlimited Attempts</div>
+          </div>
+          <div class="bg-white rounded-xl p-6 shadow-md">
+            <div class="text-3xl font-bold text-cyan-600 mb-2">
+              <i class="fas fa-trophy"></i>
+            </div>
+            <div class="text-gray-600">Instant Results</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="text-center py-16">
+      <div class="max-w-md mx-auto">
+        <i class="fas fa-question-circle text-8xl text-gray-300 mb-6"></i>
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">No Quizzes Available</h3>
+        <p class="text-gray-600 mb-8">There are no quizzes available at the moment. Check back soon for new challenges!</p>
+        <a href="{% url 'quiz_events_app:home' %}" class="inline-flex items-center px-6 py-3 bg-sky-600 text-white font-semibold rounded-xl hover:bg-sky-700 transition duration-300">
+          <i class="fas fa-home mr-2"></i>
+          Back to Home
+        </a>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

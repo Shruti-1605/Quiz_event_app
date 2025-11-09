@@ -1,0 +1,110 @@
+{% extends 'quiz_events_app/base.html' %}
+{% block title %}Quiz History - Quiz & Events{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-sky-600 to-blue-600 text-white py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h1 class="text-4xl md:text-5xl font-bold mb-4">
+      <i class="fas fa-history mr-3"></i>
+      Quiz History
+    </h1>
+    <p class="text-xl text-sky-100 max-w-2xl mx-auto">
+      Track your progress and see all your quiz attempts
+    </p>
+  </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  {% if submissions %}
+    <div class="grid gap-6">
+      {% for submission in submissions %}
+        <div class="bg-white rounded-2xl shadow-lg p-6 card-hover border border-gray-100">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center">
+              <div class="w-12 h-12 bg-gradient-to-r from-sky-500 to-blue-500 rounded-full flex items-center justify-center mr-4">
+                <i class="fas fa-brain text-white text-lg"></i>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-900">{{ submission.quiz.title }}</h3>
+                <p class="text-gray-600">{{ submission.submitted_at|date:"F j, Y - g:i A" }}</p>
+              </div>
+            </div>
+            
+            <div class="text-right">
+              <div class="text-3xl font-bold {% if submission.score >= 80 %}text-green-600{% elif submission.score >= 60 %}text-yellow-600{% else %}text-red-600{% endif %}">
+                {{ submission.score }}%
+              </div>
+              <div class="text-sm text-gray-500">Score</div>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+            <div class="flex items-center space-x-4">
+              {% if submission.score >= 80 %}
+                <span class="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                  <i class="fas fa-trophy mr-1"></i>
+                  Excellent
+                </span>
+              {% elif submission.score >= 60 %}
+                <span class="inline-flex items-center px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
+                  <i class="fas fa-medal mr-1"></i>
+                  Good
+                </span>
+              {% else %}
+                <span class="inline-flex items-center px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium">
+                  <i class="fas fa-redo mr-1"></i>
+                  Try Again
+                </span>
+              {% endif %}
+            </div>
+            
+            <div class="flex space-x-2">
+              <a href="{% url 'quiz_events_app:quiz_result' submission.id %}" class="inline-flex items-center px-4 py-2 bg-sky-100 text-sky-700 rounded-lg hover:bg-sky-200 transition duration-300">
+                <i class="fas fa-eye mr-2"></i>
+                View Details
+              </a>
+              <a href="{% url 'quiz_events_app:quiz_attempt' submission.quiz.id %}" class="inline-flex items-center px-4 py-2 btn-primary text-white rounded-lg hover:shadow-lg transition duration-300">
+                <i class="fas fa-redo mr-2"></i>
+                Retake
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    
+    <!-- Stats Section -->
+    <div class="mt-16 bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-8">
+      <div class="text-center">
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">Your Statistics</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white rounded-xl p-6 shadow-md">
+            <div class="text-3xl font-bold text-sky-600 mb-2">{{ total_attempts }}</div>
+            <div class="text-gray-600">Total Attempts</div>
+          </div>
+          <div class="bg-white rounded-xl p-6 shadow-md">
+            <div class="text-3xl font-bold text-green-600 mb-2">{{ passed_quizzes }}</div>
+            <div class="text-gray-600">Passed Quizzes</div>
+          </div>
+          <div class="bg-white rounded-xl p-6 shadow-md">
+            <div class="text-3xl font-bold text-blue-600 mb-2">{{ average_score }}%</div>
+            <div class="text-gray-600">Average Score</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="text-center py-16">
+      <div class="max-w-md mx-auto">
+        <i class="fas fa-history text-8xl text-gray-300 mb-6"></i>
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">No Quiz History</h3>
+        <p class="text-gray-600 mb-8">You haven't taken any quizzes yet. Start your learning journey today!</p>
+        <a href="{% url 'quiz_events_app:quiz_list' %}" class="inline-flex items-center px-6 py-3 btn-primary text-white font-semibold rounded-xl hover:shadow-lg transition duration-300">
+          <i class="fas fa-play mr-2"></i>
+          Take Your First Quiz
+        </a>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

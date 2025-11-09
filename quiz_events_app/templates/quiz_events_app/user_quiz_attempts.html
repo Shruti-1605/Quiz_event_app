@@ -1,0 +1,91 @@
+{% extends 'quiz_events_app/base.html' %}
+{% block title %}My Quiz Attempts - Quiz & Events{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <!-- Header -->
+  <div class="text-center mb-12">
+    <h1 class="text-4xl font-bold text-gray-900 mb-4">My Quiz Attempts</h1>
+    <p class="text-xl text-gray-600">Track your quiz progress and attempt new challenges</p>
+  </div>
+
+  <!-- Quizzes Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    {% for item in quiz_data %}
+    <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
+      <!-- Quiz Header -->
+      <div class="bg-gradient-to-r from-sky-500 to-blue-600 p-6 text-white">
+        <h3 class="text-2xl font-bold mb-2">{{ item.quiz.title }}</h3>
+        <p class="text-sky-100">{{ item.quiz.description|truncatewords:15 }}</p>
+        <div class="flex items-center mt-4 space-x-4">
+          <span class="bg-white/20 px-3 py-1 rounded-full text-sm">
+            <i class="fas fa-code mr-1"></i>{{ item.quiz.programming_language }}
+          </span>
+          <span class="bg-white/20 px-3 py-1 rounded-full text-sm">
+            <i class="fas fa-clock mr-1"></i>{{ item.quiz.time_limit }} min
+          </span>
+        </div>
+      </div>
+
+      <!-- Quiz Content -->
+      <div class="p-6">
+        <!-- Previous Attempts -->
+        {% if item.attempts %}
+        <div class="mb-6">
+          <h4 class="text-lg font-semibold text-gray-900 mb-3">
+            <i class="fas fa-history text-sky-600 mr-2"></i>Your Previous Attempts
+          </h4>
+          <div class="space-y-2">
+            {% for attempt in item.attempts %}
+            <div class="flex items-center justify-between bg-gray-50 rounded-lg p-3">
+              <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center
+                  {% if attempt.score >= 80 %}bg-green-100 text-green-600
+                  {% elif attempt.score >= 60 %}bg-yellow-100 text-yellow-600
+                  {% else %}bg-red-100 text-red-600{% endif %}">
+                  <i class="fas fa-trophy text-sm"></i>
+                </div>
+                <div>
+                  <p class="font-medium text-gray-900">{{ attempt.score }}%</p>
+                  <p class="text-sm text-gray-500">{{ attempt.submitted_at|date:"M d, Y H:i" }}</p>
+                </div>
+              </div>
+              <a href="{% url 'quiz_events_app:quiz_result' attempt.id %}" 
+                 class="text-sky-600 hover:text-sky-700 text-sm font-medium">
+                View Details
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% else %}
+        <div class="mb-6 text-center py-4">
+          <i class="fas fa-clipboard-list text-4xl text-gray-300 mb-3"></i>
+          <p class="text-gray-500">No attempts yet. Be the first to try!</p>
+        </div>
+        {% endif %}
+
+        <!-- Action Button -->
+        <div class="text-center">
+          <a href="{% url 'quiz_events_app:quiz_attempt' item.quiz.id %}" 
+             class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+            <i class="fas fa-play mr-2"></i>
+            {% if item.attempts %}
+              Attempt Again
+            {% else %}
+              Start Quiz
+            {% endif %}
+          </a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-span-full text-center py-12">
+      <i class="fas fa-brain text-6xl text-gray-300 mb-4"></i>
+      <h3 class="text-2xl font-semibold text-gray-600 mb-2">No Quizzes Available</h3>
+      <p class="text-gray-500">Check back later for new quiz challenges!</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

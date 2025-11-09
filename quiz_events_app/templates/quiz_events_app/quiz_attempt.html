@@ -1,0 +1,128 @@
+{% extends 'quiz_events_app/base.html' %}
+{% block title %}{{ quiz.title }} - Quiz Attempt{% endblock %}
+{% block content %}
+
+<!-- Header Section -->
+<div class="bg-gradient-to-r from-sky-600 to-blue-600 text-white py-8">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center mb-4">
+      <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mr-4">
+        <i class="fas fa-brain text-white text-xl"></i>
+      </div>
+      <div>
+        <h1 class="text-3xl md:text-4xl font-bold">{{ quiz.title }}</h1>
+        <p class="text-sky-100 mt-1">Quiz Attempt</p>
+      </div>
+    </div>
+    <p class="text-lg text-sky-100 max-w-2xl">{{ quiz.description }}</p>
+  </div>
+</div>
+
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <form method="POST" class="space-y-8">
+    {% csrf_token %}
+    
+    <!-- Progress Bar -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-900">Quiz Progress</h3>
+        <span class="text-sm text-gray-500">{{ questions|length }} Question{{ questions|length|pluralize }}</span>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-2">
+        <div class="bg-gradient-to-r from-sky-500 to-blue-500 h-2 rounded-full" style="width: 0%" id="progress-bar"></div>
+      </div>
+    </div>
+
+    {% for question in questions %}
+      <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 question-card" data-question="{{ forloop.counter }}">
+        <div class="flex items-start mb-6">
+          <div class="w-10 h-10 bg-gradient-to-r from-sky-500 to-blue-500 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+            <span class="text-white font-bold text-sm">{{ forloop.counter }}</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ question.text }}</h3>
+            <p class="text-sm text-gray-500">Select one answer</p>
+          </div>
+        </div>
+
+        <div class="space-y-3 ml-14">
+          {% for answer in question.answers.all %}
+            <label class="flex items-center p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-sky-50 transition duration-200 answer-option">
+              <input type="radio" name="question_{{ question.id }}" value="{{ answer.id }}" class="mr-4 h-5 w-5 text-sky-600 focus:ring-sky-500 border-gray-300">
+              <div class="flex items-center">
+                <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center mr-3 border-2 border-gray-200">
+                  <span class="text-sm font-medium text-gray-600">
+                    {% if forloop.counter == 1 %}A{% elif forloop.counter == 2 %}B{% elif forloop.counter == 3 %}C{% elif forloop.counter == 4 %}D{% elif forloop.counter == 5 %}E{% else %}{{ forloop.counter }}{% endif %}
+                  </span>
+                </div>
+                <span class="text-gray-900 font-medium">{{ answer.text }}</span>
+              </div>
+            </label>
+          {% empty %}
+            <div class="text-center py-8">
+              <i class="fas fa-exclamation-triangle text-4xl text-gray-300 mb-2"></i>
+              <p class="text-gray-500">No answers available for this question.</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+
+    <!-- Submit Section -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+      <div class="text-center">
+        <h3 class="text-xl font-semibold text-gray-900 mb-4">Ready to Submit?</h3>
+        <p class="text-gray-600 mb-6">Make sure you've answered all questions before submitting your quiz.</p>
+        <button type="submit" class="inline-flex items-center px-8 py-4 btn-primary text-white font-semibold rounded-xl hover:shadow-lg transition duration-300 text-lg">
+          <i class="fas fa-paper-plane mr-3"></i>
+          Submit Quiz
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+// Progress tracking and enhanced UX
+document.addEventListener('DOMContentLoaded', function() {
+  const questions = document.querySelectorAll('.question-card');
+  const progressBar = document.getElementById('progress-bar');
+  const totalQuestions = questions.length;
+  
+  function updateProgress() {
+    let answeredQuestions = 0;
+    questions.forEach(question => {
+      const radios = question.querySelectorAll('input[type="radio"]');
+      const isAnswered = Array.from(radios).some(radio => radio.checked);
+      if (isAnswered) answeredQuestions++;
+    });
+    
+    const progress = (answeredQuestions / totalQuestions) * 100;
+    progressBar.style.width = progress + '%';
+  }
+  
+  // Add event listeners to all radio buttons
+  document.querySelectorAll('input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      // Update visual feedback
+      const questionCard = this.closest('.question-card');
+      const options = questionCard.querySelectorAll('.answer-option');
+      
+      options.forEach(option => {
+        option.classList.remove('bg-sky-100', 'border-sky-300');
+        option.classList.add('bg-gray-50');
+      });
+      
+      this.closest('.answer-option').classList.remove('bg-gray-50');
+      this.closest('.answer-option').classList.add('bg-sky-100', 'border-sky-300');
+      
+      updateProgress();
+    });
+  });
+  
+  // Initial progress update
+  updateProgress();
+});
+</script>
+
+{% endblock %}
